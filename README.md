@@ -32,4 +32,4 @@ This project aims to facilitate the configuration and the start of new web proje
 
 ### License
 
-The project is open-source software licensed under the [MIT license] (LICENSE.md).
+The project is open-source software licensed under the [MIT license](LICENSE.md).
