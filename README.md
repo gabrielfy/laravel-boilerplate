@@ -1,5 +1,7 @@
 ## Laravel boilerplate
 
+[![Tests (PHP)](https://github.com/gabrielfy/laravel-boilerplate/actions/workflows/tests.yml/badge.svg)](https://github.com/gabrielfy/laravel-boilerplate/actions/workflows/tests.yml)
+
 This project aims to facilitate the configuration and the start of new web projects offering functionalities generally common to all.
 
 ### Fetures 
