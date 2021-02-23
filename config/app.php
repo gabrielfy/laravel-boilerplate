@@ -180,7 +180,6 @@ return [
         App\Providers\HelperServiceProvider::class,
         App\Providers\FortifyServiceProvider::class,
         App\Providers\LocaleServiceProvider::class,
-        App\Providers\BreadcrumbsServiceProvider::class,
 
     ],
 
