@@ -1,7 +1,10 @@
 <?php
 
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
+use App\Http\Controllers\LocaleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +17,30 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('lang/{lang}', [LocaleController::class, 'store'])->name('locale.store');
+
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return Inertia::render('Welcome', [
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+    ]);
+});
+
+/**
+ * Private routes
+ */
+Route::middleware(['auth', 'verified'])->group(function() {
+    /**
+     * App Routes
+     */
+    Route::prefix('u')->group(function() {
+        includeRouteFiles(__DIR__.'/app/');
+    });
+
+    /**
+     * Admin Routes
+     */
+    Route::prefix('a')->name('admin.')->group(function() {
+        includeRouteFiles(__DIR__.'/admin/');
+    });
 });

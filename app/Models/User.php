@@ -37,7 +37,8 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         'uuid',
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'active',
@@ -78,6 +79,10 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $appends = [
         'profile_photo_url',
+        'name',
+        'two_factor_enabled',
+        'is_active',
+        'is_verified',
     ];
 
     /**

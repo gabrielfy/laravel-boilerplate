@@ -8,6 +8,7 @@ use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Fortify;
+use Inertia\Inertia;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -33,11 +34,15 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
 
-        Fortify::loginView(fn () => view('auth.login'));
-        Fortify::registerView(fn () => view('auth.register'));
-        Fortify::verifyEmailView(fn () => view('auth.verify-email'));
-        Fortify::twoFactorChallengeView(fn () => view('auth.two-factor-challenge'));
-        Fortify::requestPasswordResetLinkView(fn () => view('auth.forgot-password'));
-        Fortify::resetPasswordView(fn ($request) => view('auth.reset-password', ['request' => $request]));
+        Fortify::loginView(fn () => Inertia::render('Auth/Login'));
+        Fortify::registerView(fn () => Inertia::render('Auth/Register'));
+        Fortify::verifyEmailView(fn () => Inertia::render('Auth/VerifyEmail'));
+        Fortify::twoFactorChallengeView(fn () => Inertia::render('Auth/TwoFactorChallenge'));
+        Fortify::requestPasswordResetLinkView(fn () => Inertia::render('Auth/ForgotPassword'));
+        Fortify::resetPasswordView(function ($request) {
+            return Inertia::render('Auth/ResetPassword',
+                ['email' => $request->get('email'), 'token' => $request->route('token')]
+            );
+        });
     }
 }

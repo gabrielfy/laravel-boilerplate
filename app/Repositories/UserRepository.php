@@ -11,8 +11,6 @@ use App\Events\Admin\User\UserRestored;
 use App\Events\Admin\User\UserUnconfirmed;
 use App\Events\Admin\User\UserUpdated;
 use App\Events\Admin\User\UserCreated;
-use App\Repositories\BaseRepository;
-use Illuminate\Support\Facades\DB;
 use App\Exceptions\GeneralException;
 use App\Models\User;
 use Exception;
@@ -29,12 +27,33 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param mixed $data
-     * @param string $provider
+     * @param  array  $filters
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function search(array $filters)
+    {
+        $this->newQuery();
+
+        $models = $this->query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where(function ($query) use ($search) {
+                $query->where('first_name', 'like', '%'.$search.'%')
+                    ->orWhere('last_name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%');
+            });
+        });
+
+        $this->unsetClauses();
+
+        return $models;
+    }
+
+    /**
+     * @param  mixed  $data
+     * @param  string  $provider
      * @return User
      * @throws GeneralException|\Throwable
      */
-    public function registerProvider($data, string $provider): user
+    public function registerProvider($data, string $provider): User
     {
         $user = $this->model::where('provider_id', $data->getId())->first();
 
@@ -63,7 +82,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
      * @return User
      * @throws GeneralException|\Throwable
      */
@@ -99,8 +118,8 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param User $user
-     * @param array $data
+     * @param  User  $user
+     * @param  array  $data
      * @return User
      * @throws GeneralException
      * @throws \Throwable
@@ -128,7 +147,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      * @return User
      * @throws GeneralException
      */
@@ -148,8 +167,8 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param User $user
-     * @param bool $status
+     * @param  User  $user
+     * @param  bool  $status
      * @return User
      * @throws GeneralException
      */
@@ -183,8 +202,8 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param User $user
-     * @param boolean $status
+     * @param  User  $user
+     * @param  boolean  $status
      * @return User
      * @throws GeneralException
      */
@@ -214,7 +233,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      * @return User
      * @throws GeneralException
      */
@@ -234,7 +253,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      * @return bool
      * @throws GeneralException
      */
@@ -258,8 +277,8 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param User $user
-     * @param array $data
+     * @param  User  $user
+     * @param  array  $data
      * @return User
      * @throws GeneralException
      */
@@ -275,7 +294,7 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param User $user
+     * @param  User  $user
      * @return void
      * @throws GeneralException
      */
@@ -289,8 +308,8 @@ class UserRepository extends BaseRepository
     }
 
     /**
-     * @param User $user
-     * @param array $data
+     * @param  User  $user
+     * @param  array  $data
      * @return User
      */
     private function saveUser(User $user, array $data): User

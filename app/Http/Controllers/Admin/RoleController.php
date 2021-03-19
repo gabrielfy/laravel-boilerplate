@@ -11,6 +11,9 @@ use App\Repositories\Admin\PermissionRepository;
 use App\Repositories\Admin\RoleRepository;
 use App\Exceptions\GeneralException;
 use App\Models\Role;
+use Inertia\Inertia;
+use App\Http\Resources\Role\RoleCollection;
+use App\Http\Resources\Role\RoleResource;
 
 class RoleController extends Controller
 {
@@ -24,11 +27,6 @@ class RoleController extends Controller
      * @var PermissionRepository $permissionRepository
      */
     protected PermissionRepository $permissionRepository;
-
-    /**
-     * @var string $resource
-     */
-    private $resource = 'admin.roles.';
 
     /**
      * RoleController constructor.
@@ -54,14 +52,20 @@ class RoleController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable|string
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize(['create role', 'update role', 'delete role']);
 
-        return view($this->resource.'index');
+        return Inertia::render('Admin/Roles', [
+            'roles' => new RoleCollection(
+                $this->roleRepository
+                    ->search($request->only('search'))
+                    ->paginate(10)
+            )
+        ]);
     }
 
     /**
@@ -73,8 +77,8 @@ class RoleController extends Controller
     {
         $this->authorize('create role');
 
-        return view($this->resource.'create')
-            ->withPermissions($this->permissionRepository->get(['id', 'name']));
+        return Inertia::render('Admin/Roles/Create');
+            // ->withPermissions($this->permissionRepository->get(['id', 'name']));
     }
 
     /**
@@ -115,10 +119,11 @@ class RoleController extends Controller
     {
         $this->authorize('update role');
 
-        return view($this->resource.'edit')
-            ->withRole($role)
-            ->withPermissions($this->permissionRepository->get(['id', 'name']))
-            ->withRolePermissions($role->permissions->pluck('id')->all());
+        return Inertia::render('Admin/Roles/Edit');
+        // return view($this->resource.'edit')
+        //     ->withRole($role)
+        //     ->withPermissions($this->permissionRepository->get(['id', 'name']))
+        //     ->withRolePermissions($role->permissions->pluck('id')->all());
     }
 
     /**

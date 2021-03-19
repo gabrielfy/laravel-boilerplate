@@ -10,7 +10,7 @@ use App\Http\Controllers\Admin\User\UserDeletedController;
  * Users route
  */
 Route::prefix('users')->name('users.')->group(function() {
-    Route::prefix('{user}')->group(function() {
+    Route::prefix('{uuid}')->group(function() {
         // Deleted
         Route::delete('permanently-delete', [UserDeletedController::class, 'forceDelete'])->name('permanently-delete');
         Route::post('restore', [UserDeletedController::class, 'restore'])->name('restore');

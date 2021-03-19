@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -37,7 +38,30 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
-            //
+            'appName' => appName(),
+            'appLang' => app()->getLocale(),
+            'auth' => function () use ($request) {
+                if (! $request->user()) {
+                    return;
+                }
+                // two_factor_enabled
+                return array_merge(
+                    $request->user()->only(
+                        // 'uuid',
+                        'is_active',
+                        'first_name',
+                        'last_name',
+                        'email',
+                        'profile_photo_url',
+                        'profile_photo_path',
+                        'two_factor_enabled'
+                    ),
+                    [
+                        // ...
+                    ]
+                );
+            },
+            'status' => session('status') ?? '',
         ]);
     }
 }

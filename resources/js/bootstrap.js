@@ -10,6 +10,23 @@ window.axios = require('axios')
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 
+import { InertiaProgress } from '@inertiajs/progress'
+
+InertiaProgress.init({
+  // The delay after which the progress bar will
+  // appear during navigation, in milliseconds.
+  delay: 250,
+
+  // The color of the progress bar.
+  color: '#6366f1',
+
+  // Whether to include the default NProgress styles.
+  includeCSS: true,
+
+  // Whether the NProgress spinner will be shown.
+  showSpinner: false
+})
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

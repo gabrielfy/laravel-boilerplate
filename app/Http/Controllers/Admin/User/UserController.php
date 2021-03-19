@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\User;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Http\Requests\Admin\User\UpdateUserRequest;
 use App\Http\Requests\Admin\User\StoreUserRequest;
 use App\Http\Requests\Admin\User\DestroyUserRequest;
@@ -11,6 +12,9 @@ use App\Repositories\Admin\RoleRepository;
 use App\Repositories\UserRepository;
 use App\Exceptions\GeneralException;
 use App\Models\User;
+use Inertia\Inertia;
+use App\Http\Resources\User\UserResource;
+use App\Http\Resources\User\UserCollection;
 
 class UserController extends Controller
 {
@@ -28,11 +32,6 @@ class UserController extends Controller
      * @var PermissionRepository
      */
     protected PermissionRepository $permissionRepository;
-
-    /**
-     * @var string
-     */
-    protected string $resource = 'admin.users.';
 
     /**
      * @param UserRepository $userRepository
@@ -64,15 +63,22 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Contracts\Support\Renderable|string
      * @throws Exception
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize(['create user', 'update user', 'view user', 'delete user']);
 
-        return view($this->resource.'index');
+        return Inertia::render('Admin/Users', [
+            'users' => new UserCollection(
+                $this->userRepository
+                    ->search($request->only('search'))
+                    ->paginate(10)
+            )
+        ]);
     }
 
     /**
@@ -85,9 +91,11 @@ class UserController extends Controller
     {
         $this->authorize('create user');
 
-        return view($this->resource.'create')
-            ->withRoles($this->roleRepository->get(['id', 'name']))
-            ->withPermissions($this->permissionRepository->get(['id', 'name']));
+        return Inertia::render('Admin/Users/Create');
+        // , [
+        //     'roles' => $this->roleRepository->get(['id', 'name']),
+        //     'permissions' => $this->permissionRepository->get(['id', 'name'])
+        // ]);
     }
 
     /**
@@ -119,8 +127,9 @@ class UserController extends Controller
     {
         $this->authorize('view user');
 
-        return view($this->resource.'show')
-            ->withUser($user);
+        return Inertia::render('Admin/Users/Show', [
+            'user' => new UserResource($user),
+        ]);
     }
 
     /**
@@ -134,12 +143,17 @@ class UserController extends Controller
     {
         $this->authorize('update user');
 
-        return view($this->resource.'edit')
-            ->withUser($user)
-            ->withRoles($this->roleRepository->get(['id', 'name']))
-            ->withPermissions($this->permissionRepository->get(['id', 'name']))
-            ->withUserPermissions($user->getAllPermissions()->pluck('id')->all())
-            ->withUserRoles($user->roles->pluck('id')->all());
+        return Inertia::render('Admin/Users/Edit', [
+            'user' => new UserResource($user),
+            // 'roles' => $this->roleRepository->get(['id', 'name']),
+            // 'permissions' => $this->permissionRepository->get(['id', 'name']),
+        ]);
+        // return view($this->resource.'edit')
+        //     ->withUser($user)
+        //     ->withRoles($this->roleRepository->get(['id', 'name']))
+        //     ->withPermissions($this->permissionRepository->get(['id', 'name']))
+        //     ->withUserPermissions($user->getAllPermissions()->pluck('id')->all())
+        //     ->withUserRoles($user->roles->pluck('id')->all());
     }
 
     /**

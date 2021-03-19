@@ -24,6 +24,23 @@ class RoleRepository extends BaseRepository
     }
 
     /**
+     * @param  array  $filters
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function search(array $filters)
+    {
+        $this->newQuery();
+
+        $models = $this->query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where('name', 'like', '%'.$search.'%');
+        });
+
+        $this->unsetClauses();
+
+        return $models;
+    }
+
+    /**
      * @param array $data
      * @return Role
      * @throws GeneralException|\Throwable
