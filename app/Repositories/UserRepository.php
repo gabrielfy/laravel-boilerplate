@@ -34,7 +34,7 @@ class UserRepository extends BaseRepository
      * @return User
      * @throws GeneralException|\Throwable
      */
-    public function registerProvider($data, string $provider): user
+    public function registerProvider($data, string $provider): User
     {
         $user = $this->model::where('provider_id', $data->getId())->first();
 
