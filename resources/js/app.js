@@ -2,8 +2,6 @@ require("./bootstrap");
 
 require("@coreui/coreui");
 
-import './bootstrap';
-
 const ButtonSubmit = function () {
     /*
         <button type="button" class="btn btn-primary"
