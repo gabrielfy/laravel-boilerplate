@@ -49,7 +49,7 @@ const ProfileInformationForm = () => {
               type="text"
               name="email"
               label="E-mail"
-              helperText="lorem ipsulum dolores"
+              helperText="If you change your e-mail you will be logged out until you confirm your new e-mail address."
               icon={<MdMailOutline />}
               ref={register}
             />

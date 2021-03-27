@@ -50,7 +50,7 @@ class ListUserTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->get("/a/users/{$user->id}");
+        $response = $this->get("/a/users/{$user->uuid}");
 
         $response->assertStatus(200);
     }
@@ -66,7 +66,7 @@ class ListUserTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->get("/a/users/{$user->id}");
+        $response = $this->get("/a/users/{$user->uuid}");
 
         $response->assertStatus(403);
     }

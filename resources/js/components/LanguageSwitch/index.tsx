@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import { usePage } from '@inertiajs/inertia-react'
 
-import Dropdown, { DropdownList, DropdownItem } from '@/components/Dropdown'
+import Dropdown, { DropdownList, DropdownItemLink } from '@/components/Dropdown'
 import { APP_LANG } from '@/constants'
 
 const LanguageSwitch = () => {
@@ -26,14 +26,14 @@ const LanguageSwitch = () => {
           APP_LANG,
           (value, key) =>
             key !== appLang && (
-              <DropdownItem
+              <DropdownItemLink
                 href={route('locale.store', key)}
                 className="flex items-center space-x-2"
                 key={key}
               >
                 <img className="w-6 h-6 rounded-sm" src={value.url} />
                 <label className="cursor-pointer">{value.name}</label>
-              </DropdownItem>
+              </DropdownItemLink>
             )
         )}
       </DropdownList>

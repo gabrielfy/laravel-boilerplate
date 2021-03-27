@@ -6,7 +6,6 @@ import Card, { CardBody } from '@/components/Card'
 import Avatar from '@/components/Avatar'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
-import { RiPencilLine } from 'react-icons/ri'
 import Table, {
   TableBody,
   TableCell,
@@ -16,13 +15,11 @@ import Table, {
 
 import { UserProps } from '../index'
 
-type UserShowProps = {
-  user: {
-    data: UserProps
-  }
+type UserShowPageProps = {
+  user: UserProps
 }
 
-const UserShow = ({ user: { data } }: UserShowProps) => {
+const UserShow = ({ user }: UserShowPageProps) => {
   return (
     <Admin
       breadcrumbs={[
@@ -32,22 +29,22 @@ const UserShow = ({ user: { data } }: UserShowProps) => {
         },
         {
           label: 'Show',
-          url: route('admin.users.index')
+          url: route('admin.users.show', user.uuid)
         }
       ]}
       actions={
         <Button
           as={InertiaLink}
-          href={route('admin.users.edit', data.uuid)}
-          iconLeft={<RiPencilLine />}
+          href={route('admin.users.edit', user.uuid)}
+          color="info"
         >
-          Edit
+          Edit user
         </Button>
       }
     >
       <div className="w-full flex items-center justify-between mb-5">
         <div className="flex">
-          <h1 className="font-semibold text-2xl text-gray-700">Users</h1>
+          <h1 className="font-semibold text-2xl text-gray-600">Show user</h1>
         </div>
       </div>
       <Card>
@@ -59,33 +56,33 @@ const UserShow = ({ user: { data } }: UserShowProps) => {
                   <TableCell>Profile photo</TableCell>
                   <TableCell>
                     <Avatar
-                      src={data.profile_photo_url}
+                      src={user.profile_photo_url}
                       size="large"
-                      alt="Judith"
+                      alt="Profile photo"
                     />
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Name</TableCell>
-                  <TableCell>{`${data.first_name} ${data.last_name}`}</TableCell>
+                  <TableCell>{`${user.first_name} ${user.last_name}`}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>E-mail</TableCell>
-                  <TableCell>{data.email}</TableCell>
+                  <TableCell>{user.email}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Active</TableCell>
                   <TableCell>
-                    <Badge type={data.is_active ? 'success' : 'danger'}>
-                      {data.is_active ? 'Yes' : 'No'}
+                    <Badge type={user.is_active ? 'success' : 'danger'}>
+                      {user.is_active ? 'Yes' : 'No'}
                     </Badge>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Verified</TableCell>
                   <TableCell>
-                    <Badge type={data.is_verified ? 'success' : 'danger'}>
-                      {data.is_verified ? 'Yes' : 'No'}
+                    <Badge type={user.is_verified ? 'success' : 'danger'}>
+                      {user.is_verified ? 'Yes' : 'No'}
                     </Badge>
                   </TableCell>
                 </TableRow>
@@ -93,17 +90,17 @@ const UserShow = ({ user: { data } }: UserShowProps) => {
                   <TableCell>2FA</TableCell>
                   <TableCell>
                     <Badge
-                      type={data.two_factor_enabled ? 'success' : 'danger'}
+                      type={user.two_factor_enabled ? 'success' : 'danger'}
                     >
-                      {data.two_factor_enabled ? 'Yes' : 'No'}
+                      {user.two_factor_enabled ? 'Yes' : 'No'}
                     </Badge>
                   </TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Provider</TableCell>
                   <TableCell>
-                    {data.provider ? (
-                      data.provider
+                    {user.provider ? (
+                      user.provider
                     ) : (
                       <Badge type="danger">No</Badge>
                     )}
@@ -111,11 +108,11 @@ const UserShow = ({ user: { data } }: UserShowProps) => {
                 </TableRow>
                 <TableRow>
                   <TableCell>Last login ip</TableCell>
-                  <TableCell>{data.last_login_ip || '-'}</TableCell>
+                  <TableCell>{user.last_login_ip || '-'}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell>Last login</TableCell>
-                  <TableCell>{data.last_login_at || '-'}</TableCell>
+                  <TableCell>{user.last_login_at || '-'}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>

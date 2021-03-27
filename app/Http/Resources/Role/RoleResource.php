@@ -18,8 +18,9 @@ class RoleResource extends JsonResource
         return [
             'uuid' => $this->uuid,
             'name' => $this->name,
-            'number_users' => $this->users->count(),
-            'permissions' => PermissionResource::collection($this->permissions)
+            'guard_name' => $this->guard_name,
+            'users' => $this->users->count(),
+            'permissions' => $this->permissions->pluck('name')
         ];
     }
 }

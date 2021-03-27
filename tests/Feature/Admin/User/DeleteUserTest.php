@@ -26,7 +26,7 @@ class DeleteUserTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->delete("/a/users/{$user->id}");
+        $response = $this->delete("/a/users/{$user->uuid}");
 
         $response->assertRedirect('/a/users')
             ->assertSessionHas(['flash_success' => __('The user was successfully deleted.')]);
@@ -47,7 +47,7 @@ class DeleteUserTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->delete("/a/users/{$user->id}");
+        $response = $this->delete("/a/users/{$user->uuid}");
 
         $response->assertStatus(403);
 
@@ -63,9 +63,9 @@ class DeleteUserTest extends TestCase
     {
         $user = $this->loginAsAdmin();
 
-        $response = $this->delete("/a/users/{$user->id}");
+        $response = $this->delete("/a/users/{$user->uuid}");
 
-        $response->assertSessionHas(['flash_danger' => __('You can not delete yourself.')]);
+        $response->assertSessionHas(['flash_error' => __('You can not delete yourself.')]);
 
         $this->assertDatabaseHas('users', ['id' => $user->id, 'deleted_at' => null]);
     }
@@ -81,7 +81,7 @@ class DeleteUserTest extends TestCase
 
         $admin = $this->getMasterAdmin();
 
-        $response = $this->delete("/a/users/{$admin->id}");
+        $response = $this->delete("/a/users/{$admin->uuid}");
 
         $response->assertStatus(403);
 

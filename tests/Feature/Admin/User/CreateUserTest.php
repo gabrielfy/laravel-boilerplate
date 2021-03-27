@@ -53,7 +53,7 @@ class CreateUserTest extends TestCase
 
         $response = $this->post('/a/users');
 
-        $response->assertSessionHasErrors(['name', 'email', 'password']);
+        $response->assertSessionHasErrors(['first_name', 'last_name', 'email', 'password']);
     }
 
     /**
@@ -85,28 +85,30 @@ class CreateUserTest extends TestCase
 
         $this->loginAsAdmin();
 
-        $adminRoleId = Role::whereName(config('boilerplate.auth.role.admin'))->first()->id;
+        $adminRole = Role::whereName(config('boilerplate.auth.role.admin'))->first();
 
         $response = $this->post('/a/users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
             'active' => '1',
             'roles' => [
-                $adminRoleId,
+                $adminRole->name,
             ],
             'permissions' => []
         ]);
 
         $this->assertDatabaseHas('users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'active' => true,
         ]);
 
         $this->assertDatabaseHas('model_has_roles', [
-            'role_id' => $adminRoleId,
+            'role_id' => $adminRole->id,
             'model_type' => User::class,
             'model_id' => User::whereEmail('john@example.com')->first()->id,
         ]);
@@ -126,16 +128,17 @@ class CreateUserTest extends TestCase
     {
         $this->loginAsUser();
 
-        $adminRoleId = Role::whereName(config('boilerplate.auth.role.admin'))->first()->id;
+        $adminRole = Role::whereName(config('boilerplate.auth.role.admin'))->first();
 
         $response = $this->post('/a/users', [
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
             'active' => '1',
             'roles' => [
-                $adminRoleId,
+                $adminRole->name,
             ],
             'permissions' => []
         ]);

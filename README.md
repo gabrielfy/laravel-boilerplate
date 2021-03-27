@@ -4,33 +4,32 @@
 
 This project aims to facilitate the configuration and the start of new web projects offering functionalities generally common to all.
 
-### Fetures 
+### Fetures
 
-- Authentication
-- Authentication with social networks
-- Tow-factory authenticate
-- Profile update
-- Roles and Permissions management
-- User management
+-   SPA (Single page application)
+-   Authentication
+-   Authentication with social networks
+-   Tow-factory authenticate
+-   Profile update
+-   Roles and Permissions management
+-   User management
 
 ### Packages
 
-- [Coreui](https://coreui.io)
-- [Fortify](https://laravel.com/docs/8.x/fortify)
-- [Laravel livewire](https://laravel-livewire.com)
-- [Laravel socialite](https://laravel.com/docs/8.x/socialite)
-- [Spatie permission](https://github.com/spatie/laravel-permission)
-- [Laravel livewire tables](https://github.com/rappasoft/laravel-livewire-tables)
-- [Breadcrumbs](https://github.com/tabuna/breadcrumbs)
-- [Laravel ide helper](https://github.com/barryvdh/laravel-ide-helper)
-- [Laravel impersonate](https://github.com/404labfr/laravel-impersonate)
-- [Agent](https://github.com/jenssegers/agent)
-
+-   [React JS](https://reactjs.org/)
+-   [Tailwind CSS](https://tailwindcss.com/)
+-   [Fortify](https://laravel.com/docs/8.x/fortify)
+-   [Inertia](https://inertiajs.com/)
+-   [Laravel socialite](https://laravel.com/docs/8.x/socialite)
+-   [Spatie permission](https://github.com/spatie/laravel-permission)
+-   [Laravel ide helper](https://github.com/barryvdh/laravel-ide-helper)
+-   [Laravel impersonate](https://github.com/404labfr/laravel-impersonate)
+-   [Agent](https://github.com/jenssegers/agent)
 
 ### Insprations
 
-- [Laravel boilerplate](https://github.com/rappasoft/laravel-boilerplate)
-- [Laravel jetstream](https://jetstream.laravel.com/2.x/introduction.html)
+-   [Laravel boilerplate](https://github.com/rappasoft/laravel-boilerplate)
+-   [Laravel jetstream](https://jetstream.laravel.com/2.x/introduction.html)
 
 ### License
 

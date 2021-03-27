@@ -26,7 +26,7 @@ class DeleteRoleTest extends TestCase
 
         $role = Role::factory()->create();
 
-        $response = $this->delete("/a/roles/{$role->id}");
+        $response = $this->delete("/a/roles/{$role->uuid}");
 
         $response->assertRedirect('/a/roles')
             ->assertSessionHas(['flash_success' => __('The role was successfully deleted.')]);
@@ -47,7 +47,7 @@ class DeleteRoleTest extends TestCase
 
         $role = Role::factory()->create();
 
-        $response = $this->delete("/a/roles/{$role->id}");
+        $response = $this->delete("/a/roles/{$role->uuid}");
 
         $this->assertDatabaseHas('roles', ['id' => $role->id]);
 

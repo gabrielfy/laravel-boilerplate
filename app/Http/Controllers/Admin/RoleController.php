@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Role\StoreRoleRequest;
 use App\Http\Requests\Admin\Role\UpdateRoleRequest;
@@ -14,6 +15,8 @@ use App\Models\Role;
 use Inertia\Inertia;
 use App\Http\Resources\Role\RoleCollection;
 use App\Http\Resources\Role\RoleResource;
+use App\Http\Resources\Permission\PermissionCollection;
+use App\Http\Resources\Permission\PermissionResource;
 
 class RoleController extends Controller
 {
@@ -77,8 +80,11 @@ class RoleController extends Controller
     {
         $this->authorize('create role');
 
-        return Inertia::render('Admin/Roles/Create');
-            // ->withPermissions($this->permissionRepository->get(['id', 'name']));
+        return Inertia::render('Admin/Roles/Create', [
+            'permissions' => (
+                new PermissionCollection($this->permissionRepository->orderBy('group')->get())
+            )->groupBy('group'),
+        ]);
     }
 
     /**
@@ -119,11 +125,12 @@ class RoleController extends Controller
     {
         $this->authorize('update role');
 
-        return Inertia::render('Admin/Roles/Edit');
-        // return view($this->resource.'edit')
-        //     ->withRole($role)
-        //     ->withPermissions($this->permissionRepository->get(['id', 'name']))
-        //     ->withRolePermissions($role->permissions->pluck('id')->all());
+        return Inertia::render('Admin/Roles/Edit', [
+            'permissions' => (
+                new PermissionCollection($this->permissionRepository->orderBy('group')->get())
+            )->groupBy('group'),
+            'role' => new RoleResource($role)
+        ]);
     }
 
     /**

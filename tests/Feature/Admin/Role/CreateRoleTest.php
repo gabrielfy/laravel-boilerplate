@@ -77,11 +77,12 @@ class CreateRoleTest extends TestCase
 
         $this->loginAsAdmin();
 
-        $accessAdminId = Permission::whereName('access admin')->first()->id;
+        $accessAdmin = Permission::whereName('access admin')->first();
 
         $response = $this->post('/a/roles', [
             'name' => 'Editor',
-            'permissions' => [$accessAdminId]
+            'guard_name' => 'web',
+            'permissions' => [$accessAdmin->name]
         ]);
 
         $this->assertDatabaseHas('roles', [
@@ -90,7 +91,7 @@ class CreateRoleTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('role_has_permissions', [
-            'permission_id' => $accessAdminId,
+            'permission_id' => $accessAdmin->id,
             'role_id' => Role::whereName('Editor')->first()->id,
         ]);
 
@@ -109,11 +110,12 @@ class CreateRoleTest extends TestCase
     {
         $this->loginAsUser();
 
-        $accessAdminId = Permission::whereName('access admin')->first()->id;
+        $accessAdmin = Permission::whereName('access admin')->first();
 
         $response = $this->post('/a/roles', [
             'name' => 'Editor',
-            'permissions' => [$accessAdminId]
+            'guard_name' => 'web',
+            'permissions' => [$accessAdmin->name]
         ]);
 
         $response->assertStatus(403);

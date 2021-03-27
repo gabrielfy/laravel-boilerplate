@@ -13,10 +13,6 @@ const TwoFactorChallenge = () => {
     recovery_code: ''
   })
 
-  // const handleSubmit = () => {
-  //   Inertia.post(route('two-factor.login'), values)
-  // }
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const key = e.target.name
     const value = e.target.value

@@ -52,7 +52,7 @@ class RoleRepository extends BaseRepository
         try {
             $role = $this->model::create([
                 'name' => $data['name'],
-                'guard_name' => 'web',
+                'guard_name' => $data['guard_name']
             ]);
 
             $role->syncPermissions($data['permissions'] ?? []);
@@ -83,7 +83,7 @@ class RoleRepository extends BaseRepository
 
             $role->update([
                 'name' => $data['name'],
-                'guard_name' => 'web',
+                'guard_name' => $data['guard_name']
             ]);
 
             $role->syncPermissions($data['permissions'] ?? []);

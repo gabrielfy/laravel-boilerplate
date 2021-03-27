@@ -1,63 +1,49 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import { Inertia } from '@inertiajs/inertia'
-import { useAuth } from '@/hooks'
+import React, { useState } from 'react'
+
 import Button from '@/components/Button'
 import ModalPasswordConfirmation from '@/components/ModalPasswordConfirmation'
 
+import { useAuth, useDisclosure } from '@/hooks'
+import useTwoFactorAuthentication from './useTwoFactorAuthentication'
+
 // TODO:
 const TwoFactorAuthenticationForm = () => {
-  const { two_factor_enabled } = useAuth()
-  const [recoveryCodes, setRecoveryCodes] = useState([])
-  const [qrCode, setQrCode] = useState('')
-  const [isOpen, setIsOpen] = useState(false)
   const [action, setAction] = useState('')
+  const { two_factor_enabled } = useAuth()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const { qrCode, recoveryCodes, ...actions } = useTwoFactorAuthentication()
 
-  const actions = {
-    enableTwoFactorAuthentication: () => {
-      Inertia.post(
-        '/user/two-factor-authentication',
-        {},
-        {
-          preserveScroll: true,
-          onSuccess: () =>
-            Promise.all([actions.showQrCode(), actions.showRecoveryCodes()])
-        }
-      )
-    },
-    showQrCode: () => {
-      return axios.get('/user/two-factor-qr-code').then((response) => {
-        setQrCode(response.data.svg)
-      })
-    },
-    showRecoveryCodes: () => {
-      return axios.get('/user/two-factor-recovery-codes').then((response) => {
-        setRecoveryCodes(response.data)
-      })
-    },
-    regenerateRecoveryCodes: () => {
-      axios.post('/user/two-factor-recovery-codes').then((_) => {
-        actions.showRecoveryCodes()
-      })
-    },
-    disableTwoFactorAuthentication: () => {
-      Inertia.delete('/user/two-factor-authentication', {
-        preserveScroll: true
-      })
-    }
-  } as { [key: string]: () => void }
-
-  const handleAction = (callback: string) => {
+  const onOpenModal = (callback: string) => {
     setAction(callback)
-    setIsOpen(true)
+    onOpen()
+  }
+
+  const onConfirmed = () => {
+    switch (action) {
+      case 'enableTwoFactorAuthentication':
+        actions.enableTwoFactorAuthentication()
+        break
+      case 'disableTwoFactorAuthentication':
+        actions.disableTwoFactorAuthentication()
+        break
+      case 'regenerateRecoveryCodes':
+        actions.regenerateRecoveryCodes()
+        break
+      case 'showQrCode':
+        actions.showQrCode()
+        break
+      case 'showRecoveryCodes':
+        actions.showRecoveryCodes()
+        break
+    }
   }
 
   return (
     <div className="space-y-4">
       <ModalPasswordConfirmation
-        handleCloseModal={() => setIsOpen(false)}
+        handleCloseModal={onClose}
         isOpenModal={isOpen}
-        confirmed={() => actions[action]()}
+        confirmed={onConfirmed}
       />
 
       <h1 className="font-semibold text-xl text-gray-600">
@@ -68,18 +54,10 @@ const TwoFactorAuthenticationForm = () => {
         Add additional security to your account using two factor authentication.
       </p>
 
-      <h3 className="text-lg font-medium text-gray-900">
-        {two_factor_enabled
-          ? 'You have enabled two factor authentication.'
-          : 'You have not enabled two factor authentication.'}
-      </h3>
-
-      <div className="mt-3 max-w-xl text-sm text-gray-600">
-        <p>
-          When two factor authentication is enabled, you will be prompted for a
-          secure, random token during authentication. You may retrieve this
-          token from your phone's Google Authenticator application.
-        </p>
+      <div className="text-sm text-gray-600">
+        When two factor authentication is enabled, you will be prompted for a
+        secure, random token during authentication. You may retrieve this token
+        from your phone's Google Authenticator application.
       </div>
 
       {two_factor_enabled && (
@@ -120,35 +98,44 @@ const TwoFactorAuthenticationForm = () => {
         </div>
       )}
 
-      <div className="mt-5">
-        {!two_factor_enabled && (
-          <Button onClick={() => handleAction('enableTwoFactorAuthentication')}>
-            Enable
-          </Button>
-        )}
+      <div className="w-full flex justify-end">
+        <div className="space-x-4">
+          {!two_factor_enabled && (
+            <Button
+              onClick={() => onOpenModal('enableTwoFactorAuthentication')}
+            >
+              Enable
+            </Button>
+          )}
 
-        {two_factor_enabled && (
-          <div>
-            <Button
-              type="button"
-              onClick={() => handleAction('regenerateRecoveryCodes')}
-            >
-              Regenerate Recovery Codes
-            </Button>
-            <Button
-              type="button"
-              onClick={() => handleAction('showRecoveryCodes')}
-            >
-              Show Recovery Codes
-            </Button>
-            <Button
-              type="button"
-              onClick={() => handleAction('disableTwoFactorAuthentication')}
-            >
-              Disable
-            </Button>
-          </div>
-        )}
+          {two_factor_enabled && (
+            <>
+              {recoveryCodes.length > 0 ? (
+                <Button
+                  type="button"
+                  onClick={() => onOpenModal('regenerateRecoveryCodes')}
+                >
+                  Regenerate Recovery Codes
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  onClick={() => onOpenModal('showRecoveryCodes')}
+                >
+                  Show Recovery Codes
+                </Button>
+              )}
+
+              <Button
+                type="button"
+                color="danger"
+                onClick={() => onOpenModal('disableTwoFactorAuthentication')}
+              >
+                Disable
+              </Button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

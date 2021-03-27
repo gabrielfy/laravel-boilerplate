@@ -15,6 +15,8 @@ use App\Models\User;
 use Inertia\Inertia;
 use App\Http\Resources\User\UserResource;
 use App\Http\Resources\User\UserCollection;
+use App\Http\Resources\Role\RoleCollection;
+use App\Http\Resources\Permission\PermissionCollection;
 
 class UserController extends Controller
 {
@@ -76,7 +78,7 @@ class UserController extends Controller
             'users' => new UserCollection(
                 $this->userRepository
                     ->search($request->only('search'))
-                    ->paginate(10)
+                    ->paginate()
             )
         ]);
     }
@@ -91,11 +93,12 @@ class UserController extends Controller
     {
         $this->authorize('create user');
 
-        return Inertia::render('Admin/Users/Create');
-        // , [
-        //     'roles' => $this->roleRepository->get(['id', 'name']),
-        //     'permissions' => $this->permissionRepository->get(['id', 'name'])
-        // ]);
+        return Inertia::render('Admin/Users/Create', [
+            'permissions' => (
+                new PermissionCollection($this->permissionRepository->orderBy('group')->get())
+            )->groupBy('group'),
+            'roles' => new RoleCollection($this->roleRepository->orderBy('name')->get()),
+        ]);
     }
 
     /**
@@ -145,15 +148,11 @@ class UserController extends Controller
 
         return Inertia::render('Admin/Users/Edit', [
             'user' => new UserResource($user),
-            // 'roles' => $this->roleRepository->get(['id', 'name']),
-            // 'permissions' => $this->permissionRepository->get(['id', 'name']),
+            'permissions' => (
+                new PermissionCollection($this->permissionRepository->orderBy('group')->get())
+            )->groupBy('group'),
+            'roles' => new RoleCollection($this->roleRepository->orderBy('name')->get()),
         ]);
-        // return view($this->resource.'edit')
-        //     ->withUser($user)
-        //     ->withRoles($this->roleRepository->get(['id', 'name']))
-        //     ->withPermissions($this->permissionRepository->get(['id', 'name']))
-        //     ->withUserPermissions($user->getAllPermissions()->pluck('id')->all())
-        //     ->withUserRoles($user->roles->pluck('id')->all());
     }
 
     /**

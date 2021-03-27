@@ -80,7 +80,7 @@ const Admin = ({ children, breadcrumbs, actions }: AdminProps) => {
           </div>
         </div>
       </div>
-      {/* TODO: ajust margins */}
+      {/* TODO: Ajust margins */}
       <div
         className={classNames(
           'p-6 mt-32 transition-all transform',

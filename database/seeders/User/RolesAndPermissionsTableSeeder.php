@@ -20,36 +20,38 @@ class RolesAndPermissionsTableSeeder extends Seeder
 
         $permissions = [
             // General permission
-            ['name' => 'access admin'],
+            ['group' => 'general', 'name' => 'access admin'],
 
             // Permissions user
-            ['name' => 'view user'],
-            ['name' => 'create user'],
-            ['name' => 'update user'],
-            ['name' => 'delete user'],
-            ['name' => 'restore user'],
-            ['name' => 'permanently delete user'],
-            ['name' => 'change password user'],
-            ['name' => 'deactivate user'],
-            ['name' => 'reactivate user'],
-            ['name' => 'confirm email verification user'],
-            ['name' => 'unconfirm email verification user'],
-            ['name' => 'resend email verification user'],
-            ['name' => 'clear session user'],
-            ['name' => 'impersonate user'],
+            ['group' => 'users', 'name' => 'view users'],
+            ['group' => 'users', 'name' => 'create users'],
+            ['group' => 'users', 'name' => 'update users'],
+            ['group' => 'users', 'name' => 'delete users'],
+            ['group' => 'users', 'name' => 'restore users'],
+            ['group' => 'users', 'name' => 'permanently delete users'],
+            ['group' => 'users', 'name' => 'change password users'],
+            ['group' => 'users', 'name' => 'deactivate users'],
+            ['group' => 'users', 'name' => 'reactivate users'],
+            ['group' => 'users', 'name' => 'confirm email verification users'],
+            ['group' => 'users', 'name' => 'unconfirm email verification users'],
+            ['group' => 'users', 'name' => 'resend email verification users'],
+            ['group' => 'users', 'name' => 'clear session users'],
+            ['group' => 'users', 'name' => 'impersonate users'],
 
             // Permission role
-            ['name' => 'create role'],
-            ['name' => 'update role'],
-            ['name' => 'delete role'],
+            ['group' => 'roles', 'name' => 'create roles'],
+            ['group' => 'roles', 'name' => 'update roles'],
+            ['group' => 'roles', 'name' => 'delete roles'],
         ];
 
         foreach ($permissions as $permission) {
             Permission::create([
                 'guard_name' => 'web',
-                'name' => $permission['name']
+                'name' => $permission['name'],
+                'group' => $permission['group'],
             ]);
         }
+
         // Create roles
         foreach (config('boilerplate.auth.role') as $key => $name) {
             Role::create([

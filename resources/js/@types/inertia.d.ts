@@ -22,6 +22,10 @@ declare global {
         [key: string]: string
       }>
       status?: string
+      flash: {
+        error?: string
+        success?: string
+      }
     }
   }
 }

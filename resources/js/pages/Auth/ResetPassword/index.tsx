@@ -25,7 +25,6 @@ const ResetPassword = () => {
         onSubmit={handleSubmit(onResetPassword)}
         className="w-full grid grid-cols-6 gap-6"
       >
-        <input type="hidden" name="token" ref={register} />
         <div className="col-span-6">
           <Input
             type="email"

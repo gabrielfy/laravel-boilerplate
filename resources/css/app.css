@@ -4,6 +4,8 @@
 
 @import 'react-toastify/dist/ReactToastify.css';
 
+@import 'sweetalert2/dist/sweetalert2.css';
+
 input,
 textarea,
 button,

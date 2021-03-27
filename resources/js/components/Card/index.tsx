@@ -7,7 +7,7 @@ type CardProps = {} & HTMLAttributes<HTMLDivElement>
 const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ children, className, ...props }: CardProps, ref) => {
     const style = classNames(
-      'min-w-0 rounded-lg shadow-xs overflow-hidden bg-white',
+      'min-w-0 rounded-lg shadow-sm overflow-hidden bg-white',
       className
     )
 

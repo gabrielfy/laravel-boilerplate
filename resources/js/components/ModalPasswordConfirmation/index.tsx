@@ -17,12 +17,12 @@ type ModalPasswordConfirmationProps = {
   confirmed: () => void
 }
 
-// TODO: Add submit form on enter
+// TODO: Add submit form on enter and refactor
 const ModalPasswordConfirmation = ({
   isOpenModal,
   handleCloseModal,
   confirmed,
-  textCancelButton = 'Nevermind',
+  textCancelButton = 'Cancel',
   textConfirmButton = 'Confirm',
   title = 'Confirm password',
   textBody
@@ -44,7 +44,6 @@ const ModalPasswordConfirmation = ({
         confirmed()
       })
       .catch(({ response }) => {
-        // TODO:
         toast.error(response.data.errors['password'][0])
       })
   }
@@ -55,11 +54,10 @@ const ModalPasswordConfirmation = ({
   }
 
   useEffect(() => {
-    // TODO: chando 2 vezes
     async function start() {
       if (await checkIfConfirmingPassword()) {
         confirmed()
-        handleClose() // ...
+        handleClose()
       } else {
         setIsOpen(true)
       }

@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
 use App\Exceptions\GeneralException;
 use App\Models\User;
+use App\Http\Resources\User\UserCollection;
+use Inertia\Inertia;
 
 class UserDeletedController extends Controller
 {
@@ -15,11 +17,6 @@ class UserDeletedController extends Controller
      * @var UserRepository
      */
     protected UserRepository $userRepository;
-
-    /**
-     * @var string
-     */
-    protected string $resource = 'admin.users.';
 
     /**
      *
@@ -51,21 +48,30 @@ class UserDeletedController extends Controller
     {
         $this->authorize(['permanently delete user', 'restore user']);
 
-        return view($this->resource.'deleted');
+        return Inertia::render('Admin/Users/Deleted', [
+            'users' => new UserCollection(
+                $this->userRepository
+                    ->search($request->only('search'))
+                    ->onlyTrashed()
+                    ->paginate()
+            )
+        ]);
     }
 
     /**
      * Permanently delete a user
      *
-     * @param int $id
+     * @param  string  $uuid
      * @return \Illuminate\Http\Response
      * @throws GeneralException
      */
-    public function forceDelete($id)
+    public function permanentlyDelete(string $uuid)
     {
         $this->authorize('permanently delete user');
 
-        $this->userRepository->permanentlyDelete(User::withTrashed()->findOrFail($id));
+        $user = User::onlyTrashed()->uuid($uuid)->firstOrFail();
+
+        $this->userRepository->permanentlyDelete($user);
 
         return redirect($this->redirectPath())
             ->withFlashSuccess(__('The user was permanently deleted.'));
@@ -74,15 +80,17 @@ class UserDeletedController extends Controller
     /**
      * Restore user delete
      *
-     * @param int $id
+     * @param  string  $uuid
      * @return \Illuminate\Http\Response
      * @throws GeneralException
      */
-    public function restore($id)
+    public function restore(string $uuid)
     {
         $this->authorize('restore user');
 
-        $this->userRepository->restore(User::withTrashed()->findOrFail($id));
+        $user = User::onlyTrashed()->uuid($uuid)->firstOrFail();
+
+        $this->userRepository->restore($user);
 
         return redirect($this->redirectPath())
             ->withFlashSuccess(__('The user was successfully restored.'));

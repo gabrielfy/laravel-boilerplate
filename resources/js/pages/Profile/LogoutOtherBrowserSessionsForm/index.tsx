@@ -6,6 +6,7 @@ import { MdDesktopWindows, MdLockOutline, MdPhoneIphone } from 'react-icons/md'
 import Button from '@/components/Button'
 import Input from '@/components/Input'
 import Modal from '@/components/Modal'
+import { useDisclosure } from '@/hooks'
 
 type SessionProps = {
   agent: {
@@ -57,8 +58,8 @@ const SessionItem = (session: SessionProps) => {
 const LogoutOtherBrowserSessionsForm = ({
   sessions
 }: LogoutOtherBrowserSessionsProps) => {
-  const [isOpen, setIsOpen] = useState(false)
   const [password, setPassword] = useState('')
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const handleSubmit = () => {
     Inertia.post(
@@ -71,7 +72,7 @@ const LogoutOtherBrowserSessionsForm = ({
           }
         },
         onSuccess: () => {
-          setIsOpen(false)
+          onClose()
           // TODO: Change message
           toast.success('Done')
         }
@@ -86,24 +87,29 @@ const LogoutOtherBrowserSessionsForm = ({
           Browser Sessions
         </h1>
 
+        <p className="text-sm text-gray-600">
+          Manage and log out your active sessions on other browsers and devices.
+        </p>
+
+        <div className="text-sm text-gray-600">
+          If necessary, you may log out of all of your other browser sessions
+          across all of your devices. Some of your recent sessions are listed
+          below; however, this list may not be exhaustive. If you feel your
+          account has been compromised, you should also update your password.
+        </div>
+
         {sessions?.map((session: SessionProps, index: number) => (
           <SessionItem {...session} key={index} />
         ))}
 
-        <div className="grid grid-cols-6 gap-6">
-          <div className="col-start-5 col-span-full">
-            <Button type="submit" block onClick={() => setIsOpen(true)}>
-              Logout other browser
-            </Button>
-          </div>
+        <div className="w-full flex justify-end">
+          <Button type="submit" onClick={onOpen}>
+            Logout other browser
+          </Button>
         </div>
 
         {/* TODO: submit on enter */}
-        <Modal
-          show={isOpen}
-          title="Confirm passsword"
-          handleClose={() => setIsOpen(false)}
-        >
+        <Modal show={isOpen} title="Confirm passsword" handleClose={onClose}>
           <p className="text-gray-700 text-sm mb-6">
             Please enter your password to confirm you would like to log out of
             your other browser sessions across all of your devices.
@@ -119,14 +125,10 @@ const LogoutOtherBrowserSessionsForm = ({
             </div>
           </div>
           <div className="w-full inline-flex items-center justify-end mt-6 space-x-2">
-            <Button
-              type="submit"
-              variant="outline"
-              onClick={() => setIsOpen(false)}
-            >
+            <Button type="submit" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button onClick={handleSubmit}> Logout other browser</Button>
+            <Button onClick={handleSubmit}>Logout other browser</Button>
           </div>
         </Modal>
       </div>

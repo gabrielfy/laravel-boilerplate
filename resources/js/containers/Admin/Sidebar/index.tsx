@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 
-import { MdClose, MdDashboard, MdPeople, MdRoom } from 'react-icons/md'
-
+import { MdClose, MdDashboard, MdPeople } from 'react-icons/md'
+import { FaUserLock } from 'react-icons/fa'
 import { useBreakpoint } from '@/hooks'
 
 import Transition from '@/components/Transition'
@@ -59,14 +59,26 @@ const Sidebar = ({ isOpen = true, handleClose, handleOpen }: SidebarProps) => {
           <ul className="flex flex-col w-full p-4 space-y-2">
             <SidebarDivider name="General" />
 
-            <SidebarItem href={route('admin.dashboard')} icon={MdDashboard}>
+            <SidebarItem
+              href={route('admin.dashboard')}
+              icon={MdDashboard}
+              active={route().current('admin.dashboard')}
+            >
               Dashboard
             </SidebarItem>
 
-            <SidebarItem href={route('admin.users.index')} icon={MdPeople}>
+            <SidebarItem
+              href={route('admin.users.index')}
+              icon={MdPeople}
+              active={route().current('admin.users.*')}
+            >
               Users
             </SidebarItem>
-            <SidebarItem href={route('admin.roles.index')} icon={MdRoom}>
+            <SidebarItem
+              href={route('admin.roles.index')}
+              icon={FaUserLock}
+              active={route().current('admin.roles.*')}
+            >
               Roles
             </SidebarItem>
           </ul>

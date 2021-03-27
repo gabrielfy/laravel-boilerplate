@@ -7,16 +7,6 @@ use Ramsey\Uuid\Uuid;
 trait HasUuid
 {
     /**
-     * Get the route key for the model.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
-    {
-        return 'uuid';
-    }
-
-    /**
      * @param mixed $query
      * @param string $uuid
      * @return mixed
@@ -32,6 +22,16 @@ trait HasUuid
     public function getUuidName(): string
     {
         return $this->uuidName ?? 'uuid';
+    }
+
+    /**
+     * Get the route key for the model.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return $this->getUuidName();
     }
 
     /**

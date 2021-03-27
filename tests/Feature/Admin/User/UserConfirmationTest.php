@@ -22,7 +22,7 @@ class UserConfirmationTest extends TestCase
 
         $user = User::factory()->unconfirmed()->create();
 
-        $response = $this->post("/a/users/{$user->id}/confirm/email-verification");
+        $response = $this->post("/a/users/{$user->uuid}/confirm/email-verification");
 
         $database = $this->app->make('db');
 
@@ -50,7 +50,7 @@ class UserConfirmationTest extends TestCase
 
         $user = User::factory()->unconfirmed()->create();
 
-        $response = $this->post("/a/users/{$user->id}/confirm/email-verification");
+        $response = $this->post("/a/users/{$user->uuid}/confirm/email-verification");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
@@ -71,7 +71,7 @@ class UserConfirmationTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->post("/a/users/{$user->id}/unconfirm/email-verification");
+        $response = $this->post("/a/users/{$user->uuid}/unconfirm/email-verification");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
@@ -96,7 +96,7 @@ class UserConfirmationTest extends TestCase
             'email_verified_at' => $email_verified_at
         ]);
 
-        $response = $this->post("/a/users/{$user->id}/unconfirm/email-verification");
+        $response = $this->post("/a/users/{$user->uuid}/unconfirm/email-verification");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
@@ -117,7 +117,7 @@ class UserConfirmationTest extends TestCase
 
         $user = User::factory()->unconfirmed()->create();
 
-        $response = $this->post("/a/users/{$user->id}/resend/email-verification");
+        $response = $this->post("/a/users/{$user->uuid}/resend/email-verification");
 
         // TODO: Check if notification send
 
@@ -135,7 +135,7 @@ class UserConfirmationTest extends TestCase
 
         $user = User::factory()->unconfirmed()->create();
 
-        $response = $this->post("/a/users/{$user->id}/resend/email-verification");
+        $response = $this->post("/a/users/{$user->uuid}/resend/email-verification");
 
         $response->assertStatus(403);
     }

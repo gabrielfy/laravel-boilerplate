@@ -20,6 +20,7 @@ function useUpdatePassword() {
         ...data
       },
       {
+        // @ts-ignore
         errorBag: 'updatePassword',
         onError: (errors) => {
           for (const error in errors) {

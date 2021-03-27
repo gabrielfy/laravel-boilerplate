@@ -3,14 +3,20 @@ import { RiEyeLine, RiPencilLine } from 'react-icons/ri'
 import { FiTrash2 } from 'react-icons/fi'
 import { HiDotsVertical } from 'react-icons/hi'
 import Button from '@/components/Button'
-import Dropdown, { DropdownItem } from '@/components/Dropdown'
+import Dropdown, {
+  DropdownItemButton,
+  DropdownList
+} from '@/components/Dropdown'
+import { MdRestore } from 'react-icons/md'
 
 type TableActionsProps = {
   showAction?: () => void
   editAction?: () => void
   deleteAction?: () => void
+  restoreAction?: () => void
   dropdown?: Array<{
     label: string
+    show: boolean
     action: () => void
   }>
 }
@@ -19,6 +25,7 @@ export const TableActions = ({
   showAction,
   editAction,
   deleteAction,
+  restoreAction,
   dropdown
 }: TableActionsProps) => {
   return (
@@ -26,7 +33,7 @@ export const TableActions = ({
       {!!showAction && (
         <Button
           variant="outline"
-          className="border-none hover:bg-blue-500 hover:text-white"
+          className="border-none hover:bg-info hover:text-white"
           onClick={showAction}
         >
           <RiEyeLine />
@@ -36,17 +43,27 @@ export const TableActions = ({
       {!!editAction && (
         <Button
           variant="outline"
-          className="border-none hover:bg-yellow-500 hover:text-white"
+          className="border-none hover:bg-warning hover:text-white"
           onClick={editAction}
         >
           <RiPencilLine />
         </Button>
       )}
 
+      {!!restoreAction && (
+        <Button
+          variant="outline"
+          className="border-none hover:bg-info hover:text-white"
+          onClick={restoreAction}
+        >
+          <MdRestore />
+        </Button>
+      )}
+
       {!!deleteAction && (
         <Button
           variant="outline"
-          className="border-none hover:bg-red-500 hover:text-white"
+          className="border-none hover:bg-danger hover:text-white"
           onClick={deleteAction}
         >
           <FiTrash2 />
@@ -56,20 +73,20 @@ export const TableActions = ({
       {!!dropdown && (
         <Dropdown
           title={
-            <Button
-              variant="outline"
-              className="border-none hover:bg-red-500 hover:text-white"
-            >
+            <Button variant="outline" className="border-none">
               <HiDotsVertical />
             </Button>
           }
         >
-          {/* TODO: */}
-          {dropdown.map((item, index) => (
-            <DropdownItem href="" key={index}>
-              {item.label}
-            </DropdownItem>
-          ))}
+          <DropdownList>
+            {dropdown.map(({ label, action, show }, index) =>
+              show ? (
+                <DropdownItemButton onClick={action} key={index}>
+                  {label}
+                </DropdownItemButton>
+              ) : null
+            )}
+          </DropdownList>
         </Dropdown>
       )}
     </div>

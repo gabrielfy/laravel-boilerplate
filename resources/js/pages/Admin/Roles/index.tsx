@@ -8,7 +8,6 @@ import Card, { CardBody } from '@/components/Card'
 import SearchFilter from '@/components/SearchFilter'
 import Badge from '@/components/Badge'
 import Button from '@/components/Button'
-import { BsPlus } from 'react-icons/bs'
 import Table, {
   TableContainer,
   TableBody,
@@ -18,6 +17,7 @@ import Table, {
   TableRow,
   TableActions
 } from '@/components/Table'
+import Swal from 'sweetalert2'
 
 export type PermissionProps = {
   uuid: string
@@ -27,15 +27,30 @@ export type PermissionProps = {
 export type RoleProps = {
   uuid: string
   name: string
-  number_users: number
+  guard_name: string
+  users: number
   permissions: Array<PermissionProps>
 }
 
-type RolesProps = {
+type RolesPageProps = {
   roles: DataWithPaginationProps<RoleProps>
 }
 
-const Roles = ({ roles }: RolesProps) => {
+const Roles = ({ roles }: RolesPageProps) => {
+  const handleDelete = (uuid: string) => {
+    Swal.fire({
+      title: 'Delete role',
+      text: 'Are you sure?',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Yes'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Inertia.delete(route('admin.roles.destroy', uuid))
+      }
+    })
+  }
+
   return (
     <Admin
       breadcrumbs={[
@@ -45,18 +60,14 @@ const Roles = ({ roles }: RolesProps) => {
         }
       ]}
       actions={
-        <Button
-          as={InertiaLink}
-          href={route('admin.roles.create')}
-          iconLeft={<BsPlus />}
-        >
-          Create
+        <Button as={InertiaLink} href={route('admin.roles.create')}>
+          Create role
         </Button>
       }
     >
       <div className="w-full flex items-center justify-between mb-5">
         <div className="flex">
-          <h1 className="font-semibold text-2xl text-gray-700">Roles</h1>
+          <h1 className="font-semibold text-2xl text-gray-600">Roles</h1>
         </div>
         <div className="flex">
           <SearchFilter />
@@ -69,8 +80,9 @@ const Roles = ({ roles }: RolesProps) => {
               <TableHeader>
                 <TableRow>
                   <TableCell>Name</TableCell>
+                  <TableCell>Guard name</TableCell>
                   <TableCell>Permissions</TableCell>
-                  <TableCell>Number of users</TableCell>
+                  <TableCell>Users</TableCell>
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHeader>
@@ -78,21 +90,22 @@ const Roles = ({ roles }: RolesProps) => {
                 {roles.data.map((role, index) => (
                   <TableRow key={index}>
                     <TableCell>{role.name}</TableCell>
+                    <TableCell>{role.guard_name}</TableCell>
                     <TableCell>
                       {role.permissions.map((permission, index) => (
                         <Badge type="info" key={index}>
-                          {permission.name}
+                          {permission}
                         </Badge>
                       ))}
                     </TableCell>
 
-                    <TableCell>{role.number_users}</TableCell>
+                    <TableCell>{role.users}</TableCell>
                     <TableCell>
                       <TableActions
                         editAction={() =>
                           Inertia.visit(route('admin.roles.edit', role.uuid))
                         }
-                        deleteAction={() => {}}
+                        deleteAction={() => handleDelete(role.uuid)}
                       />
                     </TableCell>
                   </TableRow>

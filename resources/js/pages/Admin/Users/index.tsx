@@ -1,6 +1,7 @@
 import React from 'react'
 import { Inertia } from '@inertiajs/inertia'
 import { InertiaLink } from '@inertiajs/inertia-react'
+import Swal from 'sweetalert2'
 
 import Admin from '@/containers/Admin'
 import Avatar from '@/components/Avatar'
@@ -18,7 +19,8 @@ import Table, {
   TableActions
 } from '@/components/Table'
 import Button from '@/components/Button'
-import { BsPlus } from 'react-icons/bs'
+import Dropdown, { DropdownItemLink, DropdownList } from '@/components/Dropdown'
+import { HiDotsVertical } from 'react-icons/hi'
 
 export type UserProps = {
   uuid: string
@@ -34,11 +36,48 @@ export type UserProps = {
   provider?: string
 }
 
-type UsersProps = {
+type UsersPageProps = {
   users: DataWithPaginationProps<UserProps>
 }
 
-const Users = ({ users }: UsersProps) => {
+const UsersActions = () => {
+  return (
+    <div className="flex items-center">
+      <Button href={route('admin.users.create')} as={InertiaLink} color="info">
+        Create user
+      </Button>
+      <Dropdown
+        title={
+          <Button variant="outline" className="border-none">
+            <HiDotsVertical />
+          </Button>
+        }
+      >
+        <DropdownList>
+          <DropdownItemLink href={route('admin.users.deleted')}>
+            Deleted
+          </DropdownItemLink>
+        </DropdownList>
+      </Dropdown>
+    </div>
+  )
+}
+
+const Users = ({ users }: UsersPageProps) => {
+  const handleDelete = (uuid: string) => {
+    Swal.fire({
+      title: 'Delete user',
+      text: 'Are you sure?',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Yes'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Inertia.delete(route('admin.users.destroy', uuid))
+      }
+    })
+  }
+
   return (
     <Admin
       breadcrumbs={[
@@ -47,19 +86,11 @@ const Users = ({ users }: UsersProps) => {
           url: route('admin.users.index')
         }
       ]}
-      actions={
-        <Button
-          as={InertiaLink}
-          href={route('admin.users.create')}
-          iconLeft={<BsPlus />}
-        >
-          Create
-        </Button>
-      }
+      actions={<UsersActions />}
     >
       <div className="w-full flex items-center justify-between mb-5">
         <div className="flex">
-          <h1 className="font-semibold text-2xl text-gray-700">Users</h1>
+          <h1 className="font-semibold text-2xl text-gray-600">Users</h1>
         </div>
         <div className="flex">
           <SearchFilter />
@@ -83,7 +114,7 @@ const Users = ({ users }: UsersProps) => {
                 {users.data.map((user, index) => (
                   <TableRow key={index}>
                     <TableCell>
-                      <div className="flex items-center text-sm">
+                      <div className="flex items-center text-sm text-gray-600">
                         <Avatar src={user.profile_photo_url} alt="Judith" />
                         <span className="font-semibold ml-2">
                           {`${user.first_name} ${user.last_name}`}
@@ -121,7 +152,75 @@ const Users = ({ users }: UsersProps) => {
                         editAction={() =>
                           Inertia.visit(route('admin.users.edit', user.uuid))
                         }
-                        deleteAction={() => console.log(user)}
+                        deleteAction={() => handleDelete(user.uuid)}
+                        dropdown={[
+                          {
+                            label: 'Change password',
+                            show: true,
+                            action: () =>
+                              Inertia.visit(
+                                route('admin.users.change-password', user.uuid)
+                              )
+                          },
+                          {
+                            label: 'Deactivate',
+                            show: user.is_active,
+                            action: () =>
+                              Inertia.post(
+                                route('admin.users.deactivate', user.uuid)
+                              )
+                          },
+                          {
+                            label: 'Mark user as verified',
+                            show: !user.is_verified,
+                            action: () =>
+                              Inertia.post(
+                                route(
+                                  'admin.users.confirm-email-verification',
+                                  user.uuid
+                                )
+                              )
+                          },
+                          {
+                            label: 'Mark user as unverified',
+                            show: user.is_verified,
+                            action: () =>
+                              Inertia.post(
+                                route(
+                                  'admin.users.unconfirm-email-verification',
+                                  user.uuid
+                                )
+                              )
+                          },
+                          {
+                            // TODO: Error 404
+                            label: 'Login as ' + user.first_name,
+                            show: true,
+                            action: () =>
+                              Inertia.visit(route('impersonate', user.uuid))
+                          },
+                          {
+                            label: 'Reactivate',
+                            show: !user.is_active,
+                            action: () =>
+                              Inertia.post(
+                                route('admin.users.reactivate', user.uuid),
+                                {},
+                                { preserveScroll: true, preserveState: true }
+                              )
+                          },
+                          {
+                            label: 'Resend verification email',
+                            show: !user.is_verified,
+                            action: () =>
+                              Inertia.post(
+                                route(
+                                  'admin.users.resend-email-verification',
+                                  user.uuid
+                                )
+                              )
+                          }
+                        ]}
                       />
                     </TableCell>
                   </TableRow>

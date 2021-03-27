@@ -3,6 +3,7 @@
 use App\Http\Controllers\Profile\ProfilePhotoController;
 use App\Http\Controllers\Profile\UserProfileController;
 use App\Http\Controllers\Profile\OtherBrowserSessionsController;
+use App\Http\Controllers\Profile\CurrentUserController;
 
 Route::name('user-profile-information.')->group(function() {
     Route::put('delete-profile-photo', [ProfilePhotoController::class, 'delete'])->name('delete-profile-photo');
@@ -12,3 +13,5 @@ Route::name('user-profile-information.')->group(function() {
 });
 
 Route::post('other-browser-sessions.destroy', [OtherBrowserSessionsController::class, 'destroy'])->name('other-browser-sessions.destroy');
+
+Route::delete('current-user-destroy', [CurrentUserController::class, 'destroy'])->name('current-user.destroy');

@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react'
-import { usePage } from '@inertiajs/inertia-react'
-import { toast } from 'react-toastify'
+import React from 'react'
 
 import { MdMailOutline, MdLockOutline } from 'react-icons/md'
 import Button from '@/components/Button'
@@ -13,19 +11,6 @@ import useLogin from './useLogin'
 
 const Login = () => {
   const { register, processing, handleSubmit, onLogin } = useLogin()
-  const { status, errors } = usePage().props
-
-  useEffect(() => {
-    if (status) {
-      toast.info(status)
-    }
-
-    if (errors) {
-      for (const error in errors) {
-        toast.error(errors[error])
-      }
-    }
-  }, [])
 
   return (
     <Auth

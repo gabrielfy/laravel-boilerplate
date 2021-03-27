@@ -16,11 +16,6 @@ class UserStatusController extends Controller
     protected UserRepository $userRepository;
 
     /**
-     * @var string
-     */
-    protected string $resource = 'admin.users.';
-
-    /**
      *
      * @param UserRepository $userRepository
      * @return void
@@ -38,19 +33,6 @@ class UserStatusController extends Controller
     public function redirectPath()
     {
         return route('admin.users.index');
-    }
-
-    /**
-     * Display a listing of the resource deactivated.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Contracts\Support\Renderable|string
-     */
-    public function deactivated(Request $request)
-    {
-        $this->authorize(['reactivate user', 'deactivate user']);
-
-        return view($this->resource.'deactivated');
     }
 
     /**

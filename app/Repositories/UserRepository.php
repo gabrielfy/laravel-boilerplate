@@ -2,6 +2,8 @@
 
 namespace App\Repositories;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use App\Events\Admin\User\UserConfirmed;
 use App\Events\Admin\User\UserDeactivated;
 use App\Events\Admin\User\UserDeleted;
@@ -40,7 +42,8 @@ class UserRepository extends BaseRepository
                     ->orWhere('last_name', 'like', '%'.$search.'%')
                     ->orWhere('email', 'like', '%'.$search.'%');
             });
-        });
+        })
+            ->orderBy('created_at', 'DESC');
 
         $this->unsetClauses();
 
@@ -61,8 +64,11 @@ class UserRepository extends BaseRepository
             DB::beginTransaction();
 
             try {
+                $name = Str::of($data->getName())->explode(' ');
+
                 $user = $this->saveUser(new User(), [
-                    'name' => $data->getName(),
+                    'first_name' => $name[0],
+                    'last_name' => $name[1] ?? '',
                     'email' => $data->getEmail(),
                     'provider_id' => $data->getId(),
                     'provider' => $provider,
@@ -92,7 +98,8 @@ class UserRepository extends BaseRepository
 
         try {
             $user = $this->saveUser(new User(), [
-                'name' => $data['name'],
+                'first_name' => $data['first_name'],
+                'last_name' => $data['last_name'],
                 'email' => $data['email'],
                 'password' => $data['password'],
                 'active' => isset($data['active']) && $data['active'] === '1',
@@ -100,15 +107,15 @@ class UserRepository extends BaseRepository
             ]);
 
             $user->syncRoles($data['roles'] ?? []);
-            $user->syncPermissions($data['permissions'] ?? []);
 
             if (isset($data['send_confirmation_email']) && $data['send_confirmation_email'] === '1') {
                 $user->sendEmailVerificationNotification();
             }
 
             event(new UserCreated($user));
-        } catch (Exception) {
+        } catch (Exception $e) {
             DB::rollBack();
+            dd( $e->getMessage());
             throw new GeneralException(__('There was a problem creating this user. Please try again.'));
         }
 
@@ -132,7 +139,6 @@ class UserRepository extends BaseRepository
             $this->saveUser($user, $data);
 
             $user->syncRoles($data['roles'] ?? []);
-            $user->syncPermissions($data['permissions'] ?? []);
 
             event(new UserUpdated($user));
         } catch (Exception) {

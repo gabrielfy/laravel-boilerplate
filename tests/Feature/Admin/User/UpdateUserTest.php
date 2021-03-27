@@ -25,7 +25,7 @@ class UpdateUserTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->get("/a/users/{$user->id}/edit");
+        $response = $this->get("/a/users/{$user->uuid}/edit");
 
         $response->assertStatus(200);
     }
@@ -41,7 +41,7 @@ class UpdateUserTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->get("/a/users/{$user->id}/edit");
+        $response = $this->get("/a/users/{$user->uuid}/edit");
 
         $response->assertStatus(403);
     }
@@ -57,9 +57,9 @@ class UpdateUserTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->put("/a/users/{$user->id}");
+        $response = $this->put("/a/users/{$user->uuid}");
 
-        $response->assertSessionHasErrors(['name', 'email']);
+        $response->assertSessionHasErrors(['first_name', 'last_name', 'email']);
     }
 
 
@@ -76,7 +76,7 @@ class UpdateUserTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->put("/a/users/{$user->id}", [
+        $response = $this->put("/a/users/{$user->uuid}", [
             'email' => 'john@example.com',
         ]);
 
@@ -92,21 +92,23 @@ class UpdateUserTest extends TestCase
     {
         $this->loginAsAdmin();
 
-        $adminRoleId = Role::whereName(config('boilerplate.auth.role.admin'))->first()->id;
+        $adminRole = Role::whereName(config('boilerplate.auth.role.admin'))->first();
 
         $user = User::factory()->create();
 
         $this->assertDatabaseMissing('users', [
             'id' => $user->id,
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
         ]);
 
-        $response = $this->put("/a/users/{$user->id}", [
-            'name' => 'John Doe',
+        $response = $this->put("/a/users/{$user->uuid}", [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'roles' => [
-                $adminRoleId,
+                $adminRole->name,
             ],
         ]);
 
@@ -122,21 +124,23 @@ class UpdateUserTest extends TestCase
     {
         $this->loginAsUser();
 
-        $adminRoleId = Role::whereName(config('boilerplate.auth.role.admin'))->first()->id;
+        $adminRole = Role::whereName(config('boilerplate.auth.role.admin'))->first();
 
         $user = User::factory()->create();
 
         $this->assertDatabaseMissing('users', [
             'id' => $user->id,
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
         ]);
 
-        $response = $this->put("/a/users/{$user->id}", [
-            'name' => 'John Doe',
+        $response = $this->put("/a/users/{$user->uuid}", [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'roles' => [
-                $adminRoleId,
+                $adminRole->name,
             ],
         ]);
 
@@ -154,32 +158,35 @@ class UpdateUserTest extends TestCase
 
         $this->loginAsAdmin();
 
-        $adminRoleId = Role::whereName(config('boilerplate.auth.role.admin'))->first()->id;
+        $adminRole = Role::whereName(config('boilerplate.auth.role.admin'))->first();
 
         $user = User::factory()->create();
 
         $this->assertDatabaseMissing('users', [
             'id' => $user->id,
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
         ]);
 
-        $response = $this->put("/a/users/{$user->id}", [
-            'name' => 'John Doe',
+        $response = $this->put("/a/users/{$user->uuid}", [
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
             'roles' => [
-                $adminRoleId,
+                $adminRole->name,
             ],
         ]);
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
-            'name' => 'John Doe',
+            'first_name' => 'John',
+            'last_name' => 'Doe',
             'email' => 'john@example.com',
         ]);
 
         $this->assertDatabaseHas('model_has_roles', [
-            'role_id' => $adminRoleId,
+            'role_id' => $adminRole->id,
             'model_type' => User::class,
             'model_id' => User::whereEmail('john@example.com')->first()->id,
         ]);

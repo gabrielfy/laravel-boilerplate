@@ -12,34 +12,6 @@ class UserStatusTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * User with permission can access the deactivated users page
-     *
-     * @return void
-     */
-    public function test_check_user_with_permission_can_access_the_deactivated_users_page()
-    {
-        $this->loginAsAdmin();
-
-        $response = $this->get('/a/users/deactivated');
-
-        $response->assertStatus(200);
-    }
-
-    /**
-     * User without permission cannot access the deactivated users page
-     *
-     * @return void
-     */
-    public function test_user_without_permission_cannot_access_the_deactivated_users_page()
-    {
-        $this->loginAsUser();
-
-        $response = $this->get('/a/users/deactivated');
-
-        $response->assertStatus(403);
-    }
-
-    /**
      * Check user with permission deactivate user
      *
      * @return void
@@ -50,7 +22,7 @@ class UserStatusTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->post("/a/users/{$user->id}/deactivate");
+        $response = $this->post("/a/users/{$user->uuid}/deactivate");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
@@ -71,7 +43,7 @@ class UserStatusTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->post("/a/users/{$user->id}/deactivate");
+        $response = $this->post("/a/users/{$user->uuid}/deactivate");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
@@ -87,7 +59,7 @@ class UserStatusTest extends TestCase
 
         $user = User::factory()->inactive()->create();
 
-        $response = $this->post("/a/users/{$user->id}/reactivate");
+        $response = $this->post("/a/users/{$user->uuid}/reactivate");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
@@ -103,7 +75,7 @@ class UserStatusTest extends TestCase
 
         $user = User::factory()->inactive()->create();
 
-        $response = $this->post("/a/users/{$user->id}/reactivate");
+        $response = $this->post("/a/users/{$user->uuid}/reactivate");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,

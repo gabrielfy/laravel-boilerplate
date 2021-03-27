@@ -25,7 +25,7 @@ class UpdateRoleTest extends TestCase
 
         $role = Role::factory()->create();
 
-        $response = $this->get("/a/roles/{$role->id}/edit");
+        $response = $this->get("/a/roles/{$role->uuid}/edit");
 
         $response->assertStatus(200);
     }
@@ -41,7 +41,7 @@ class UpdateRoleTest extends TestCase
 
         $role = Role::factory()->create();
 
-        $response = $this->get("/a/roles/{$role->id}/edit");
+        $response = $this->get("/a/roles/{$role->uuid}/edit");
 
         $response->assertStatus(403);
     }
@@ -57,7 +57,7 @@ class UpdateRoleTest extends TestCase
 
         $role = Role::factory()->create();
 
-        $response = $this->put("/a/roles/{$role->id}");
+        $response = $this->put("/a/roles/{$role->uuid}");
 
         $response->assertSessionHasErrors('name');
     }
@@ -69,7 +69,7 @@ class UpdateRoleTest extends TestCase
 
         $role = Role::factory()->create();
 
-        $response = $this->put("/a/roles/{$role->id}", ['name' => config('boilerplate.auth.role.admin')]);
+        $response = $this->put("/a/roles/{$role->uuid}", ['name' => config('boilerplate.auth.role.admin')]);
 
         $response->assertSessionHasErrors('name');
     }
@@ -85,15 +85,16 @@ class UpdateRoleTest extends TestCase
 
         $this->loginAsAdmin();
 
-        $accessAdminId = Permission::whereName('access admin')->first()->id;
+        $accessAdmin = Permission::whereName('access admin')->first();
 
         $role = Role::factory()->create([
             'name' => 'Editor'
         ]);
 
-        $response = $this->put("/a/roles/{$role->id}", [
+        $response = $this->put("/a/roles/{$role->uuid}", [
             'name' => 'Editor 2',
-            'permissions' => [$accessAdminId]
+            'guard_name' => 'web',
+            'permissions' => [$accessAdmin->name]
         ]);
 
         $this->assertDatabaseHas('roles', [
@@ -102,7 +103,7 @@ class UpdateRoleTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('role_has_permissions', [
-            'permission_id' => $accessAdminId,
+            'permission_id' => $accessAdmin->id,
             'role_id' => $role->id,
         ]);
 
@@ -121,13 +122,14 @@ class UpdateRoleTest extends TestCase
     {
         $this->loginAsUser();
 
-        $accessAdminId = Permission::whereName('access admin')->first()->id;
+        $accessAdmin = Permission::whereName('access admin')->first();
 
         $role = Role::factory()->create();
 
-        $response = $this->put("/a/roles/{$role->id}", [
+        $response = $this->put("/a/roles/{$role->uuid}", [
             'name' => 'Editor',
-            'permissions' => [$accessAdminId]
+            'guard_name' => 'web',
+            'permissions' => [$accessAdmin->name]
         ]);
 
         $response->assertStatus(403);

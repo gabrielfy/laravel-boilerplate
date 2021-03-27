@@ -10,9 +10,9 @@ use App\Http\Controllers\Admin\User\UserDeletedController;
  * Users route
  */
 Route::prefix('users')->name('users.')->group(function() {
-    Route::prefix('{uuid}')->group(function() {
+    Route::prefix('{user}')->group(function() {
         // Deleted
-        Route::delete('permanently-delete', [UserDeletedController::class, 'forceDelete'])->name('permanently-delete');
+        Route::delete('permanently-delete', [UserDeletedController::class, 'permanentlyDelete'])->name('permanently-delete');
         Route::post('restore', [UserDeletedController::class, 'restore'])->name('restore');
 
         // Password update
@@ -34,7 +34,7 @@ Route::prefix('users')->name('users.')->group(function() {
 
     Route::get('deleted', [UserDeletedController::class, 'deleted'])->name('deleted');
 
-    Route::get('deactivated', [UserStatusController::class, 'deactivated'])->name('deactivated');
+    // Route::get('deactivated', [UserStatusController::class, 'deactivated'])->name('deactivated');
 });
 
 Route::resource('users', UserController::class);

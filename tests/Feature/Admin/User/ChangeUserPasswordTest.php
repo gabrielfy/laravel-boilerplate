@@ -23,7 +23,7 @@ class ChangeUserPasswordTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->get("/a/users/{$user->id}/password/change");
+        $response = $this->get("/a/users/{$user->uuid}/password/change");
 
         $response->assertStatus(200);
     }
@@ -39,7 +39,7 @@ class ChangeUserPasswordTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->get("/a/users/{$user->id}/password/change");
+        $response = $this->get("/a/users/{$user->uuid}/password/change");
 
         $response->assertStatus(403);
     }
@@ -55,7 +55,7 @@ class ChangeUserPasswordTest extends TestCase
 
         $admin = $this->getMasterAdmin();
 
-        $response = $this->get("/a/users/{$admin->id}/password/change");
+        $response = $this->get("/a/users/{$admin->uuid}/password/change");
 
         $response->assertStatus(403);
     }
@@ -71,7 +71,7 @@ class ChangeUserPasswordTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->put("/a/users/{$user->id}/password/change/update");
+        $response = $this->put("/a/users/{$user->uuid}/password/change/update");
 
         $response->assertSessionHasErrors('password');
     }
@@ -87,7 +87,7 @@ class ChangeUserPasswordTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->put("/a/users/{$user->id}/password/change/update", [
+        $response = $this->put("/a/users/{$user->uuid}/password/change/update", [
             'password' => 'password1',
             'password_confirmation' => 'password0'
         ]);
@@ -106,7 +106,7 @@ class ChangeUserPasswordTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->put("/a/users/{$user->id}/password/change/update", [
+        $response = $this->put("/a/users/{$user->uuid}/password/change/update", [
             'password' => 'password123',
             'password_confirmation' => 'password123'
         ]);
@@ -127,7 +127,7 @@ class ChangeUserPasswordTest extends TestCase
 
         $user = User::factory()->create();
 
-        $response = $this->put("/a/users/{$user->id}/password/change/update", [
+        $response = $this->put("/a/users/{$user->uuid}/password/change/update", [
             'password' => 'password123',
             'password_confirmation' => 'password123'
         ]);
@@ -146,7 +146,7 @@ class ChangeUserPasswordTest extends TestCase
 
         $admin = $this->getMasterAdmin();
 
-        $response = $this->put("/a/users/{$admin->id}/password/change/update", [
+        $response = $this->put("/a/users/{$admin->uuid}/password/change/update", [
             'password' => 'password123',
             'password_confirmation' => 'password123'
         ]);

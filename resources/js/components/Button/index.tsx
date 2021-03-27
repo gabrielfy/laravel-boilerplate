@@ -12,7 +12,7 @@ type ButtonTypes =
 
 export type ButtonProps = {
   size?: 'small' | 'medium' | 'large'
-  color?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning'
+  color?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'info'
   variant?: 'link' | 'outline'
   uppercase?: boolean
   disabled?: boolean
@@ -79,7 +79,7 @@ const Button = forwardRef<React.ElementType, ButtonProps>(
     ref
   ) => {
     const baseStyle =
-      'align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none space-x-3'
+      'align-bottom inline-flex items-center justify-center cursor-pointer leading-5 transition-colors duration-150 font-medium focus:outline-none space-x-2'
 
     const styles = classNames(
       baseStyle,

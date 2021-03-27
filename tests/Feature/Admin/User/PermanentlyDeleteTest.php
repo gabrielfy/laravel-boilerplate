@@ -50,7 +50,7 @@ class PermanentlyDeleteTest extends TestCase
 
         $user = User::factory()->deleted()->create();
 
-        $response = $this->delete("/a/users/{$user->id}/permanently-delete");
+        $response = $this->delete("/a/users/{$user->uuid}/permanently-delete");
 
         $this->assertDatabaseMissing('users', ['id' => $user->id]);
 
@@ -69,7 +69,7 @@ class PermanentlyDeleteTest extends TestCase
         $deteted_at = now();
         $user = User::factory()->create(['deleted_at' => $deteted_at]);
 
-        $response = $this->delete("/a/users/{$user->id}/permanently-delete");
+        $response = $this->delete("/a/users/{$user->uuid}/permanently-delete");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
@@ -90,7 +90,7 @@ class PermanentlyDeleteTest extends TestCase
 
         $user = User::factory()->deleted()->create();
 
-        $response = $this->post("/a/users/{$user->id}/restore");
+        $response = $this->post("/a/users/{$user->uuid}/restore");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,
@@ -112,7 +112,7 @@ class PermanentlyDeleteTest extends TestCase
         $deteted_at = now();
         $user = User::factory()->create(['deleted_at' => $deteted_at]);
 
-        $response = $this->post("/a/users/{$user->id}/restore");
+        $response = $this->post("/a/users/{$user->uuid}/restore");
 
         $this->assertDatabaseHas('users', [
             'id' => $user->id,

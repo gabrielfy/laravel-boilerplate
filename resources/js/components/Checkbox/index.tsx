@@ -2,7 +2,7 @@ import React, { InputHTMLAttributes, forwardRef } from 'react'
 
 import classNames from 'classnames'
 
-type CheckboxProps = {
+export type CheckboxProps = {
   name: string
   color?: 'primary' | 'secondary'
   helpText?: string
@@ -16,7 +16,15 @@ const checkboxModifiers = {
 
 const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
   (
-    { children, name, color = 'primary', helpText = '', error = '', ...props },
+    {
+      children,
+      name,
+      color = 'primary',
+      helpText = '',
+      error = '',
+      id,
+      ...props
+    },
     ref
   ) => {
     const styles = classNames(
@@ -29,7 +37,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
       <div className="flex items-start">
         <div className="flex items-center h-5">
           <input
-            id={name}
+            id={id || name}
             name={name}
             type="checkbox"
             className={styles}
@@ -38,10 +46,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
           />
         </div>
         <div className="ml-3 text-sm">
-          <label
-            htmlFor={name}
-            className="font-medium text-gray-700 select-none"
-          >
+          <label htmlFor={id || name} className="text-gray-700">
             {children}
           </label>
           {!!helpText && <p className="text-gray-500">{helpText}</p>}

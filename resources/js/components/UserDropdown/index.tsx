@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Avatar from '@/components/Avatar'
-import Dropdown, { DropdownItem, DropdownList } from '@/components/Dropdown'
+import Dropdown, { DropdownItemLink, DropdownList } from '@/components/Dropdown'
 
 import { useAuth } from '@/hooks'
 
@@ -22,15 +22,17 @@ const UserDropdown = () => {
       }
     >
       <DropdownList>
-        <DropdownItem href={route('admin.dashboard')}>Admin</DropdownItem>
-        <DropdownItem href={route('user-profile-information.index')}>
+        <DropdownItemLink href={route('admin.dashboard')}>
+          Admin
+        </DropdownItemLink>
+        <DropdownItemLink href={route('user-profile-information.index')}>
           Profile
-        </DropdownItem>
+        </DropdownItemLink>
       </DropdownList>
       <DropdownList>
-        <DropdownItem href={route('logout')} as="button" method="post">
+        <DropdownItemLink href={route('logout')} as="button" method="post">
           Logout
-        </DropdownItem>
+        </DropdownItemLink>
       </DropdownList>
     </Dropdown>
   )

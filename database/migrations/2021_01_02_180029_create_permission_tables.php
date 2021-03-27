@@ -24,6 +24,7 @@ class CreatePermissionTables extends Migration
             $table->bigIncrements('id');
             $table->uuid('uuid')->unique();
             $table->string('name');
+            $table->string('group');
             $table->string('guard_name');
             $table->timestamps();
         });

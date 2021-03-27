@@ -29,6 +29,7 @@ function useProfileInformation() {
         ...data
       },
       {
+        // @ts-ignore
         errorBag: 'updateProfileInformation',
         onError: (errors) => {
           for (const error in errors) {

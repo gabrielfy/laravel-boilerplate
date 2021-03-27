@@ -25,12 +25,11 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required', 'max:255'],
+            'first_name' => ['required', 'max:255'],
+            'last_name' => ['required', 'max:255'],
             'email' => ['required', 'max:255', 'email', Rule::unique('users')->ignore($this->user->id)],
             'roles' => ['sometimes', 'array'],
-            'roles.*' => [Rule::exists('roles', 'id')],
-            'permissions' => ['sometimes', 'array'],
-            'permissions.*' => [Rule::exists('permissions', 'id')],
+            'roles.*' => [Rule::exists('roles', 'name')],
         ];
     }
 }

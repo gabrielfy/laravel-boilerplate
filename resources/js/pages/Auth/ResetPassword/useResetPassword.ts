@@ -13,32 +13,36 @@ type ResetPasswordProps = {
 }
 
 function useResetPassword() {
+  // TODO: remove any type
   const { email, token } = usePage<any>().props
   const { register, handleSubmit, setValue } = useForm<ResetPasswordProps>({
     defaultValues: {
-      email,
-      token
+      email
     }
   })
   const [processing, setProcessing] = useState(false)
 
   const onResetPassword = (data: ResetPasswordProps) => {
-    Inertia.post(route('password.update'), data, {
-      onError: (errors) => {
-        for (const error in errors) {
-          toast.error(errors[error])
-        }
+    Inertia.post(
+      route('password.update'),
+      { ...data, token },
+      {
+        onError: (errors) => {
+          for (const error in errors) {
+            toast.error(errors[error])
+          }
 
-        setValue('password', '')
-        setValue('password_confirmation', '')
-      },
-      onStart: () => {
-        setProcessing(true)
-      },
-      onFinish: () => {
-        setProcessing(false)
+          setValue('password', '')
+          setValue('password_confirmation', '')
+        },
+        onStart: () => {
+          setProcessing(true)
+        },
+        onFinish: () => {
+          setProcessing(false)
+        }
       }
-    })
+    )
   }
 
   return {

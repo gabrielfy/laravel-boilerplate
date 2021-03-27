@@ -27,7 +27,8 @@ class UserResource extends JsonResource
             'last_login_at' => $this->last_login_at,
             'is_verified' => $this->is_verified,
             'provider' => $this->provider,
-            'roles' => RoleResource::collection($this->roles)
+            'roles' => $this->roles->pluck('name'),
+            'permissions' => $this->permissions->pluck('name'),
         ];
     }
 }

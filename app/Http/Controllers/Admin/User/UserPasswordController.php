@@ -6,8 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\User\EditPasswordRequest;
 use App\Http\Requests\Admin\User\UpdatePasswordRequest;
+use App\Http\Resources\User\UserResource;
 use App\Repositories\UserRepository;
 use App\Models\User;
+use Inertia\Inertia;
 
 class UserPasswordController extends Controller
 {
@@ -36,8 +38,9 @@ class UserPasswordController extends Controller
     {
         $this->authorize(['change password user']);
 
-        return view('admin.users.change-password')
-            ->withUser($user);
+        return Inertia::render('Admin/Users/ChangePassword', [
+            'user' => new UserResource($user)
+        ]);
     }
 
     /**
