@@ -25,6 +25,12 @@ Breadcrumbs::for('admin.users.show', fn (Trail $trail, $user) =>
         ->push(__('Show'), route('admin.users.show', $user))
 );
 
+Breadcrumbs::for('admin.users.change-password', fn (Trail $trail, $user) =>
+    $trail
+        ->parent('admin.users.index')
+        ->push(__('Change password'), route('admin.users.change-password', $user))
+);
+
 Breadcrumbs::for('admin.users.deactivated', fn (Trail $trail) =>
     $trail
         ->parent('admin.users.index')
