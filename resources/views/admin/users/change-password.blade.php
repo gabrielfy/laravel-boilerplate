@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', __('Users - Change Password'))
+@section('title', __('Users - Change password'))
 
 @section('content')
     <div class="main-card mb-3 card">
@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="position-relative row form-group">
-                    <label for="last_name" class="col-sm-2 col-form-label">{{ __('Confirm Password') }}</label>
+                    <label for="last_name" class="col-sm-2 col-form-label">{{ __('Confirm password') }}</label>
                     <div class="col-sm-4">
                         <input name="password_confirmation" id="password_confirmation" type="password" class="form-control" />
                     </div>
@@ -30,7 +30,7 @@
 
             <div class="text-right">
                     <a href="{{ route('admin.users.index') }}" class="btn btn-link">{{ __('Cancel') }}</a>
-                    <button type="submit" class="btn btn-primary">{{ __('Create') }}</button>
+                    <button type="submit" class="btn btn-primary">{{ __('Salvar') }}</button>
                 </div>
             </form>
         </div>
