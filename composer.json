@@ -20,7 +20,7 @@
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.3",
         "ramsey/uuid": "^4.1",
-        "rappasoft/laravel-livewire-tables": "^0.3.3",
+        "rappasoft/laravel-livewire-tables": "^1.8",
         "spatie/laravel-permission": "^3.18",
         "tabuna/breadcrumbs": "^2.3"
     },

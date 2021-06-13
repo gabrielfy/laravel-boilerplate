@@ -4,40 +4,14 @@ namespace App\Http\Livewire\Admin;
 
 use App\Models\Role;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\TableComponent;
-use Rappasoft\LaravelLivewireTables\Traits\HtmlComponents;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 /**
  * Class RolesTable.
  */
-class RolesTable extends TableComponent
+class RolesTable extends DataTableComponent
 {
-    use HtmlComponents;
-
-    /**
-     * @var string
-     */
-    public $sortField = 'name';
-
-    /**
-     * @var string
-     */
-    public $status;
-
-    /**
-     * @var int
-     */
-    public $perPage = 10;
-
-    /**
-     * @var array
-     */
-    protected $options = [
-        'bootstrap.container' => false,
-        'bootstrap.classes.table' => 'table table-responsive-sm table-hover mb-0 ',
-    ];
-
     /**
      * @param string $status
      */
@@ -63,14 +37,16 @@ class RolesTable extends TableComponent
             Column::make(__('Name'), 'name')
                 ->searchable()
                 ->sortable(),
-            Column::make(__('Number of users'))
-                ->format(function(Role $model) {
-                    return $model->users()->count();
-                }),
-            Column::make(__('Actions'))
-                ->format(function (Role $model) {
-                    return view('admin.roles.includes.actions', ['role' => $model]);
-                }),
+            Column::make(__('Number of users')),
+            Column::make(__('Actions')),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function rowView(): string
+    {
+        return 'admin.roles.includes.row';
     }
 }

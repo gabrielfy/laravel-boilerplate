@@ -4,39 +4,18 @@ namespace App\Http\Livewire\Admin;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
-use Rappasoft\LaravelLivewireTables\TableComponent;
-use Rappasoft\LaravelLivewireTables\Traits\HtmlComponents;
+use Rappasoft\LaravelLivewireTables\DataTableComponent;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 
 /**
  * Class UsersTable.
  */
-class UsersTable extends TableComponent
+class UsersTable extends DataTableComponent
 {
-    use HtmlComponents;
-
-    /**
-     * @var string
-     */
-    public $sortField = 'name';
-
     /**
      * @var string
      */
     public $status;
-
-    /**
-     * @var int
-     */
-    public $perPage = 10;
-
-    /**
-     * @var array
-     */
-    protected $options = [
-        'bootstrap.container' => false,
-        'bootstrap.classes.table' => 'table table-responsive-sm table-hover mb-0 ',
-    ];
 
     /**
      * @param string $status
@@ -70,23 +49,22 @@ class UsersTable extends TableComponent
     public function columns(): array
     {
         return [
-            Column::make(__('Avatar'))
-                ->format(function(User $model) {
-                    return $this->image($model->profile_photo_url, $model->name, ['class' => 'c-avatar-img', 'style' => 'width: 2.25rem;']);
-                }),
+            Column::make(__('Avatar')),
             Column::make(__('Name'), 'name')
                 ->searchable()
                 ->sortable(),
             Column::make(__('Email'), 'email')
                 ->searchable()
-                ->sortable()
-                ->format(function (User $model) {
-                    return $this->mailto($model->email);
-                }),
-            Column::make(__('Actions'))
-                ->format(function (User $model) {
-                    return view('admin.users.includes.actions', ['user' => $model]);
-                }),
+                ->sortable(),
+            Column::make(__('Actions')),
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function rowView(): string
+    {
+        return 'admin.users.includes.row';
     }
 }

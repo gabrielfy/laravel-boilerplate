@@ -14,7 +14,7 @@
             href="javascript:;"
             class="border-0 btn-transition btn btn-outline-danger"
             data-toggle="tooltip"
-            data-original-title="Delete register"
+            data-original-title="{{ __('Delete role') }}"
             data-submit-method="DELETE"
             data-submit-action="{{ route('admin.roles.destroy', $role) }}"
             data-submit-cancel="true"
