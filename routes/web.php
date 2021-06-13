@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 use App\Http\Controllers\LocaleController;
-use App\Http\Controllers\LoginSocialController;
+use App\Http\Controllers\Auth\LoginSocialController;
 
 
 /**

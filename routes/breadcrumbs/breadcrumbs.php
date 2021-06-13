@@ -1,5 +1,4 @@
 <?php
 
-includeRouteFiles(__DIR__.'/app/');
-includeRouteFiles(__DIR__.'/admin/');
-
+includeFilesInFolder(__DIR__.'/app/');
+includeFilesInFolder(__DIR__.'/admin/');
